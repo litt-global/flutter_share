@@ -15,11 +15,13 @@ class FlutterShare {
   /// - LinkUrl: Is the [linkUrl] to include with the message.
   /// - ChooserTitle (Just for Android): Is the [chooserTitle] of the app
   /// chooser popup. If null the system default title will be used.
-  static Future<bool?> share(
-      {required String title,
-      String? text,
-      String? linkUrl,
-      String? chooserTitle}) async {
+  static Future<bool?> share({
+    required String title,
+    String? text,
+    String? linkUrl,
+    String? imagePath,
+    String? chooserTitle,
+  }) async {
     assert(title.isNotEmpty);
 
     if (title.isEmpty) {
@@ -30,6 +32,7 @@ class FlutterShare {
       'title': title,
       'text': text,
       'linkUrl': linkUrl,
+      'imagePath': imagePath,
       'chooserTitle': chooserTitle,
     });
 
@@ -44,14 +47,15 @@ class FlutterShare {
   /// - FilePath: It's the [filePath] to include with the message.
   /// - ChooserTitle (Just for Android): It's the [chooserTitle] of the app
   /// chooser popup. If null, the system default title will be used.
-  /// - FileType (Just for Android): It's the [fileType] that will be sent in the 
+  /// - FileType (Just for Android): It's the [fileType] that will be sent in the
   /// chooser popup. If null, the system default title will be used.
-  static Future<bool?> shareFile(
-      {required String title,
-      required String filePath,
-      String? text,
-      String? chooserTitle,
-      String fileType = '*/*'}) async {
+  static Future<bool?> shareFile({
+    required String title,
+    required String filePath,
+    String? text,
+    String? chooserTitle,
+    String fileType = '*/*',
+  }) async {
     assert(title.isNotEmpty);
     assert(filePath.isNotEmpty);
 
@@ -61,8 +65,7 @@ class FlutterShare {
       throw FlutterError('FilePath cannot be null');
     }
 
-    final success =
-        await _channel.invokeMethod('shareFile', <String, dynamic>{
+    final success = await _channel.invokeMethod('shareFile', <String, dynamic>{
       'title': title,
       'text': text,
       'filePath': filePath,

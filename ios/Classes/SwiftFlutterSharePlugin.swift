@@ -28,6 +28,7 @@ public class SwiftFlutterSharePlugin: NSObject, FlutterPlugin {
         let title = args!["title"] as? String
         let text = args!["text"] as? String
         let linkUrl = args!["linkUrl"] as? String
+        let imagePath = args!["imagePath"] as? String
 
         if (title == nil || title!.isEmpty) {
             return false
@@ -40,18 +41,26 @@ public class SwiftFlutterSharePlugin: NSObject, FlutterPlugin {
         if (text != nil && text != "") {
             textList.append(text!)
         }
-        // Link url
-        if (linkUrl != nil && linkUrl != "") {
-            textList.append(linkUrl!)
-        }
 
         var textToShare = ""
 
         if (!textList.isEmpty) {
-            textToShare = textList.joined(separator: "\n\n")
+            textToShare = textList.joined(separator: "\n\n") + "\n\n"
         }
 
         sharedItems.append((textToShare as NSObject?)!)
+
+        // Link url
+        if (linkUrl != nil && linkUrl != "") {
+            let urlToShare = URL(string: linkUrl!)
+            sharedItems.append((urlToShare as NSObject?)!)
+        }
+
+        // Image
+        if (imagePath != nil && imagePath != "") {
+            let imageToShare = UIImage(contentsOfFile: imagePath!)
+            sharedItems.append((imageToShare as NSObject?)!)
+        }
 
         let activityViewController = UIActivityViewController(activityItems: sharedItems, applicationActivities: nil)
 
